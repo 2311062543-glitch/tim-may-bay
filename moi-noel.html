@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp Giáng sinh dành cho anh 🎄</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600&display=swap&subset=vietnamese" rel="stylesheet">
+<style>
+:root{--red:#c0182f;--green:#0f5a36;--gold:#f1c75b;--ink:#4a1a22;--paper:#fffaf0;--line:#f1e3cf}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Quicksand',system-ui,sans-serif;color:var(--ink);
+background:radial-gradient(ellipse at 50% 0%,#1f7a4a 0%,#0f4a2d 55%,#082a1a 100%);
+display:flex;align-items:center;justify-content:center;
+padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.stage{position:relative;width:min(92vw,440px);height:min(86dvh,640px);display:flex;align-items:center;justify-content:center;z-index:2}
+/* envelope */
+.env{position:absolute;width:min(78vw,320px);aspect-ratio:3/2;cursor:pointer;transition:transform .9s ease,opacity .6s ease;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.env .back{position:absolute;inset:0;background:#9e1226;border-radius:8px;box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.env .front{position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,#d9253d,#b31a30);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.env .flap{position:absolute;left:0;top:0;width:100%;height:58%;transform-origin:top;background:#e23049;clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .7s ease;z-index:3}
+.env .seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;z-index:4;transition:opacity .3s;
+background:radial-gradient(circle,#ffe08a,#d9a62e);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.env .tap{position:absolute;bottom:-36px;width:100%;text-align:center;font-weight:600;color:#ffe9a8;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.opened .env{animation:none;transform:translateY(120px) scale(.9);opacity:0;pointer-events:none}
+.opened .env .flap{transform:rotateX(180deg)}
+.opened .env .seal,.opened .env .tap{opacity:0}
+/* letter */
+.letter{position:absolute;width:min(92vw,440px);max-height:100%;overflow:auto;background:var(--paper);border-radius:14px;padding:28px 24px 24px;
+border:3px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.5);
+background-image:repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);
+transform:translateY(60px) scale(.4);opacity:0;pointer-events:none;transition:transform .9s cubic-bezier(.2,.9,.3,1.2) .5s,opacity .5s ease .5s}
+.opened .letter{transform:none;opacity:1;pointer-events:auto}
+.letter h1{font:700 34px 'Dancing Script',cursive;color:var(--red);margin-bottom:10px}
+.letter p{line-height:32px;font-size:16px;font-weight:500}
+.info{margin:12px 0;padding:10px 14px;background:rgba(255,255,255,.9);border:1.5px dashed var(--green);border-radius:12px;line-height:1.9;font-weight:600}
+.sign{font:700 28px 'Dancing Script',cursive;color:var(--red);text-align:right;margin-top:8px}
+.btns{position:relative;height:74px;margin-top:14px}
+button{font:600 16px 'Quicksand',sans-serif;border:0;border-radius:999px;padding:12px 22px;cursor:pointer;touch-action:manipulation}
+#yes{background:var(--red);color:#fff;box-shadow:0 6px 16px rgba(192,24,47,.5);position:absolute;left:0;top:10px;transition:transform .2s}
+#yes:hover{transform:scale(1.06)}
+#no{background:#fff;color:var(--ink);border:1.5px solid #d9c3a5;position:absolute;right:0;top:10px;transition:left .25s,top .25s}
+.pop{position:fixed;pointer-events:none;font-size:26px;animation:pop 1.6s ease-out forwards;z-index:9}
+@keyframes pop{to{transform:translate(var(--dx),var(--dy)) rotate(40deg);opacity:0}}
+/* page 2 */
+.page2{position:fixed;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;
+background:radial-gradient(ellipse at 50% 20%,#1c2f6b 0%,#0b1536 60%,#050a1f 100%);color:#fff3cf;
+opacity:0;pointer-events:none;transition:opacity 1.4s ease}
+.go .page2{opacity:1;pointer-events:auto}
+.lights{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6px);left:0;width:100%;display:flex;justify-content:space-around}
+.lights i{width:11px;height:11px;border-radius:50%;background:#ffd34d;box-shadow:0 0 12px 4px rgba(255,200,70,.8);animation:tw 1.8s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25;transform:scale(.8)}}
+.big{font-size:clamp(80px,22vw,130px);line-height:1;filter:drop-shadow(0 0 22px rgba(255,211,77,.8));animation:float 3s ease-in-out infinite}
+.page2 h2{font:700 clamp(34px,9vw,52px) 'Dancing Script',cursive;color:#ffe08a;text-shadow:0 0 18px #ffb347;margin:10px 0}
+.page2 p{max-width:420px;line-height:1.7;font-size:17px;font-weight:500}
+.recap{margin:16px 0;padding:12px 18px;border:1.5px dashed #ffe08a;border-radius:14px;line-height:1.9;font-weight:600;background:rgba(255,255,255,.07)}
+.page2 .sign2{font:700 28px 'Dancing Script',cursive;color:#ffe08a;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="env" id="env">
+    <div class="back"></div><div class="front"></div><div class="flap"></div>
+    <div class="seal">🎄</div>
+    <div class="tap">Chạm để mở thiệp 🎁</div>
+  </div>
+  <div class="letter">
+    <h1 id="hello"></h1>
+    <p id="body1"></p>
+    <div class="info" id="info"></div>
+    <p id="body2"></p>
+    <div class="sign" id="sign"></div>
+    <div class="btns">
+      <button id="yes">Anh đồng ý 🎄</button>
+      <button id="no">Để anh nghĩ đã</button>
+    </div>
+  </div>
+</div>
+
+<div class="page2" id="page2">
+  <div class="lights" id="lights"></div>
+  <div class="big">🎄</div>
+  <h2 id="thx"></h2>
+  <p id="thxText"></p>
+  <div class="recap" id="recap"></div>
+  <p id="thxEnd"></p>
+  <div class="sign2" id="sign2"></div>
+</div>
+<canvas id="snow"></canvas>
+
+<script>
+// ====== SỬA THÔNG TIN Ở ĐÂY ======
+const C={
+  to:'Hoàng',
+  from:'Em',
+  date:'Đêm Giáng sinh (24/12)',
+  time:'19:00',
+  place:'Anh chọn nhé, em đi đâu cũng được',
+  line1:'Giáng sinh năm nay, em muốn dành cho anh một buổi tối thật đặc biệt. Mình cùng nhau đi dạo dưới ánh đèn, ăn một bữa thật ngon và ngắm Noel nhé?',
+  line2:'Anh đồng ý đi cùng em nhé! Anh bấm nút bên dưới để trả lời em.',
+  thx:'Cảm ơn anh nhiều lắm! 🥰',
+  thxText:'Em vui lắm vì anh đã nhận lời. Em sẽ chờ đến ngày hôm đó, và em tin đó sẽ là một Giáng sinh thật đáng nhớ của hai đứa mình.',
+  thxEnd:'Giáng sinh an lành, anh Hoàng của em ❤️'
+};
+// ==================================
+const $=id=>document.getElementById(id),p=new URLSearchParams(location.search);
+const name=p.get('to')||C.to,date=p.get('date')||C.date,time=p.get('time')||C.time,place=p.get('place')||C.place,from=p.get('from')||C.from;
+const infoHTML='📅 <b>Ngày:</b> '+date+'<br>⏰ <b>Giờ:</b> '+time+'<br>📍 <b>Nơi:</b> '+place;
+$('hello').textContent='Gửi anh '+name+' 🎄';
+$('body1').textContent=C.line1;$('info').innerHTML=infoHTML;$('body2').textContent=C.line2;
+$('sign').textContent='— '+from+' ♡';
+$('thx').textContent=C.thx;$('thxText').textContent=C.thxText;$('recap').innerHTML=infoHTML;
+$('thxEnd').textContent=C.thxEnd;$('sign2').textContent='— '+from+' ♡';
+document.title='Thiệp Giáng sinh gửi anh '+name+' 🎄';
+const cols=['#ffd34d','#ff6b6b','#7ee081','#7ec8ff'];
+for(let i=0;i<14;i++){const l=document.createElement('i');l.style.background=cols[i%4];
+l.style.boxShadow='0 0 12px 4px '+cols[i%4];l.style.animationDelay=(i*.25)+'s';l.style.marginTop=(Math.sin(i)*6+6)+'px';$('lights').appendChild(l)}
+
+$('env').onclick=()=>$('stage').classList.add('opened');
+
+// nút "Để anh nghĩ đã" chạy trốn
+const no=$('no'),yes=$('yes'),box=document.querySelector('.btns');
+const txt=['Để anh nghĩ đã','Bắt không được đâu 😝','Thôi mà, đồng ý đi','Nút này hư rồi 🙈','Đừng bấm nữa 🥺'];let n=0;
+function run(e){
+  e.preventDefault();n++;no.textContent=txt[Math.min(n,txt.length-1)];
+  const bw=box.clientWidth-no.offsetWidth,bh=box.clientHeight-no.offsetHeight;
+  no.style.right='auto';no.style.left=Math.random()*bw+'px';no.style.top=Math.random()*bh+'px';
+  yes.style.transform='scale('+Math.min(1+n*.08,1.5)+')';
+}
+no.addEventListener('mouseenter',run);no.addEventListener('touchstart',run,{passive:false});no.addEventListener('click',run);
+
+// đồng ý -> trang cảm ơn
+const em=['🎄','⭐','❄️','🎁','💖'];
+yes.onclick=()=>{
+  const r=document.querySelector('.letter').getBoundingClientRect();
+  for(let i=0;i<40;i++){
+    const s=document.createElement('span');s.className='pop';s.textContent=em[i%5];
+    s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top+r.height/2)+'px';
+    s.style.setProperty('--dx',(Math.random()*2-1)*innerWidth*.5+'px');
+    s.style.setProperty('--dy',(Math.random()*2-1)*innerHeight*.5+'px');
+    s.style.animationDelay=Math.random()*.3+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),2400);
+  }
+  setTimeout(()=>document.body.classList.add('go'),900);
+};
+
+// tuyết rơi
+const cv=$('snow'),x=cv.getContext('2d');let W,H,fl=[];
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;fl=[];for(let i=0;i<Math.floor(W*H/9000);i++)fl.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*3,v:.4+Math.random()*1.3,a:Math.random()*6,s:.3+Math.random()})}
+function dr(){x.clearRect(0,0,W,H);x.fillStyle='#fff';
+  fl.forEach(s=>{s.y+=s.v;s.a+=.012;s.x+=Math.sin(s.a)*s.s+.2;if(s.y>H+5){s.y=-5;s.x=Math.random()*W}if(s.x>W+5)s.x=-5;
+    x.globalAlpha=.85;x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill()});
+  requestAnimationFrame(dr)}
+addEventListener('resize',rs);rs();dr();
+</script>
+</body>
+</html>
