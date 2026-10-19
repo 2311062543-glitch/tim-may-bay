@@ -1,110 +1,101 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffe8ef">
-  <title>Thiệp chúc mừng 20/10 🌷</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp 20/10 - Gửi người đặc biệt 🌷</title>
+    <link rel="stylesheet" href="style.css?v=4">
+    <script src="script.js?v=4" defer></script>
 </head>
 <body>
-  <div class="petal-layer" id="petalLayer" aria-hidden="true"></div>
+    <div class="petals" id="petals"></div>
 
-  <main class="scene">
-    <p class="top-note">
-      GỬI TẶNG CÁC BÀ, CÁC MẸ, CÁC CHỊ, CÁC EM THÂN MẾN
-    </p>
+    <main class="container">
+        <!-- TRANG 1: PHONG BÌ -->
+        <section class="page active" id="homePage">
+            <div class="top-label">HAPPY VIETNAMESE WOMEN'S DAY</div>
+            <h1>Gửi cậu một chút yêu thương 💗</h1>
+            <p class="subtitle">Ngày 20 tháng 10 — một ngày thật đặc biệt</p>
 
-    <section class="envelope-area" id="envelopeArea">
-      <button class="envelope" id="openEnvelope" type="button"
-              aria-label="Mở phong bì thiệp 20 tháng 10"
-              aria-expanded="false">
-        <span class="letter-preview">
-          <span class="preview-date">20/10</span>
-          <span class="preview-flower">🌹</span>
-          <span class="preview-caption">
-            Một lời chúc dành tặng những người phụ nữ em yêu quý
-          </span>
-        </span>
-        <span class="envelope-back"></span>
-        <span class="envelope-flap"></span>
-        <span class="envelope-front"></span>
-        <span class="envelope-seal">🌹</span>
-      </button>
-      <p class="tap-hint" id="tapHint">
-        Chạm vào phong bì để mở thiệp của Đào Bá Hoàng
-      </p>
-    </section>
+            <button class="envelope-button" id="envelopeButton"
+                    aria-label="Mở phong bì">
+                <div class="envelope">
+                    <div class="letter">
+                        <span>💌</span>
+                        <p>Một lời chúc dành riêng cho cậu</p>
+                    </div>
+                    <div class="envelope-back"></div>
+                    <div class="envelope-flap"></div>
+                    <div class="heart-seal">♥</div>
+                </div>
+            </button>
 
-    <section class="greeting-card" id="greetingCard"
-             aria-live="polite" aria-hidden="true">
-      <div class="card-flower">💐 🌷 💐</div>
-      <p class="eyebrow">CHÚC MỪNG</p>
-      <h1>Ngày Phụ nữ<br><span>Việt Nam</span></h1>
-      <div class="date">20 <span>/</span> 10 <b>♥</b></div>
+            <p class="hint" id="envelopeHint">
+                Chạm vào phong bì để mở thư nhé!
+            </p>
+        </section>
 
-      <div class="wishes" id="wishes">
-        <p class="wish-line">Chúc các chị một ngày 20/10 thật rạng rỡ!</p>
-        <p class="wish-line">Luôn xinh đẹp, tự tin và tràn đầy năng lượng.</p>
-        <p class="wish-line">Chúc công việc thuận lợi, sức khỏe dồi dào,</p>
-        <p class="wish-line">mỗi ngày đều ngập tràn niềm vui và yêu thương.</p>
-        <p class="wish-line">Chúc mọi người luôn rạng rỡ như những đóa hoa! 🌷</p>
-      </div>
+        <!-- TRANG 2: LỜI CHÚC -->
+        <section class="page" id="letterPage">
+            <div class="letter-card">
+                <div class="flower-decoration">🌷 🌸 🌷</div>
+                <h2>Chúc mừng ngày 20/10!</h2>
 
-      <p class="thank-you">
-        Cảm ơn mọi người vì đã mang đến những điều tốt đẹp! 💗
-      </p>
+                <p class="greeting">Gửi cậu, người xứng đáng với những điều dịu dàng nhất 💕</p>
 
-      <p class="signature">
-        Thân gửi,<br>
-        <strong>Đào Bá Hoàng 🌷</strong>
-      </p>
+                <p>
+                    Chúc cậu luôn vui vẻ, bình an và gặp thật nhiều điều may mắn.
+                    Mong rằng mỗi ngày của cậu đều có những nụ cười,
+                    những người yêu thương và những điều nhỏ bé khiến cậu hạnh phúc.
+                </p>
 
-      <button class="flower-button" id="flowerButton" type="button">
-        <span aria-hidden="true">💐</span>
-        Nhận hoa từ Đào Bá Hoàng
-      </button>
+                <p>
+                    Chúc cậu luôn tự tin, luôn là chính mình và có thật nhiều
+                    lý do để mỉm cười. Mong mọi điều tốt đẹp nhất sẽ đến với cậu,
+                    không chỉ hôm nay mà còn cả những ngày sau nữa.
+                </p>
 
-      <p class="flower-message" id="flowerMessage" role="status"></p>
+                <p class="signature">
+                    Một bó hoa nhỏ, gửi cậu thật nhiều yêu thương 🌷
+                </p>
 
-      <button class="replay-button" id="replayButton" type="button">
-        ↻ Xem lại thiệp
-      </button>
-    </section>
+                <button class="primary-button" id="flowerButton">
+                    Nhận hoa từ em 🌸
+                </button>
+            </div>
+        </section>
 
-    <!-- TRANG NHẬN QUÀ: CHỈ CÓ MỘT MÓN QUÀ LÀ HOA -->
-    <section class="gift-page" id="giftPage" aria-hidden="true">
-      <div class="gift-heading">
-        💐 Một món quà nhỏ dành tặng bạn 💐
-      </div>
+        <!-- TRANG 3: NHẬN HOA -->
+        <section class="page" id="giftPage">
+            <div class="gift-card">
+                <div class="gift-sparkles">✨ 🌸 ✨</div>
+                <p class="top-label">A LITTLE GIFT FOR YOU</p>
+                <h2>Món quà dành riêng cho cậu</h2>
+                <p class="subtitle">Không cần may mắn, vì món quà này đã dành cho cậu rồi!</p>
 
-      <p class="gift-intro">
-        Dù chỉ là một món quà nhỏ, em mong nó sẽ mang đến cho bạn
-        thật nhiều niềm vui. Hãy nhấn nút để nhận hoa nhé!
-      </p>
+                <div class="flower-box" id="flowerBox">
+                    <div class="bouquet">💐</div>
+                    <div class="flower-caption">Một bó hoa thật xinh</div>
+                </div>
 
-      <div class="gift-stage" id="giftStage" aria-live="polite">
-        <div class="gift-box">🎁</div>
-        <p>Món quà bí mật đang chờ bạn...</p>
-      </div>
+                <button class="primary-button" id="receiveButton">
+                    Nhận bó hoa này 💗
+                </button>
 
-      <button class="draw-button" id="drawButton" type="button">
-        🌷 Nhận hoa từ Đào Bá Hoàng 🌷
-      </button>
+                <p class="gift-message hidden" id="giftMessage">
+                    🌷 Tặng cậu một bó hoa cùng lời chúc:
+                    luôn xinh tươi, vui vẻ và hạnh phúc nhé!
+                    <br><br>
+                    Chúc cậu có một ngày 20/10 thật đáng nhớ. 💕
+                </p>
 
-      <p class="gift-result" id="giftResult" role="status"></p>
+                <button class="secondary-button" id="backButton">
+                    ← Quay lại đọc lời chúc
+                </button>
+            </div>
+        </section>
+    </main>
 
-      <button class="replay-button" id="backToCardButton" type="button">
-        ← Quay lại thiệp
-      </button>
-    </section>
-
-    <footer>
-      Được gửi bằng sự trân trọng và yêu thương ♡
-    </footer>
-  </main>
-
-  <script src="script.js"></script>
+    <footer>Made with ♡ for October 20th</footer>
 </body>
 </html>
