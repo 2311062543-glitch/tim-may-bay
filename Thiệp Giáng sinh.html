@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp Giáng sinh</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Georgia,serif}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+background:radial-gradient(ellipse at 50% 30%,#5a1620 0%,#2a0a14 60%,#14050a 100%);
+padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.card{position:relative;width:min(94vw,960px,calc((100dvh - 90px) * 1.5));aspect-ratio:3/2;perspective:1800px;cursor:pointer;
+filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+@media (orientation:portrait){.card{width:min(90vw,520px,calc((100dvh - 110px) * .7));aspect-ratio:7/10}}
+.inside{position:absolute;inset:0;border-radius:6px;overflow:hidden;background:#0a1230;border:3px solid #f1d58a}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.greet{position:absolute;top:4%;width:100%;text-align:center;color:#ffe9a8;padding:0 12px;
+text-shadow:0 0 14px #ffb347,0 0 30px #ff9d2e;opacity:0;transition:opacity 1.2s ease 1.2s}
+.greet b{display:block;font:italic 700 clamp(22px,5.5vw,44px) Georgia,serif;letter-spacing:2px}
+.greet span{font-size:clamp(12px,2.4vw,18px)}
+.open .greet{opacity:1}
+.cover{position:absolute;inset:0;transform-origin:left center;transition:transform 1.5s cubic-bezier(.6,.05,.25,1);
+backface-visibility:hidden;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2%;
+background:linear-gradient(135deg,#b3162b,#7d0e1e);border:3px solid #f1d58a;color:#ffe9a8;text-align:center;padding:6%}
+.cover::before{content:"";position:absolute;inset:12px;border:2px dashed rgba(241,213,138,.7);border-radius:4px}
+.open .cover{transform:rotateY(-180deg)}
+.tree{font-size:clamp(60px,16vw,130px);line-height:1;filter:drop-shadow(0 0 18px rgba(255,211,77,.7))}
+.cover h1{font:italic 700 clamp(26px,6vw,52px) Georgia,serif;text-shadow:0 2px 0 #5a0a14}
+.cover p{font-size:clamp(13px,2.4vw,18px);opacity:.9}
+.tap{animation:p 1.6s ease-in-out infinite;margin-top:2%}
+@keyframes p{50%{opacity:.35;transform:scale(.96)}}
+.hint{color:#e9c9a0;font-size:14px;opacity:.8}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="inside">
+    <canvas id="bg"></canvas><canvas id="fx"></canvas>
+    <div class="greet"><b>Merry Christmas</b><span id="msg"></span></div>
+  </div>
+  <div class="cover">
+    <div class="tree">🎄</div>
+    <h1>Merry Christmas</h1>
+    <p id="to">Một món quà nhỏ dành cho bạn</p>
+    <p class="tap">✨ Chạm để mở thiệp ✨</p>
+  </div>
+</div>
+<div class="hint" id="hint">Chạm vào thiệp để mở / đóng</div>
+<script>
+const q=new URLSearchParams(location.search).get('to');
+document.getElementById('msg').textContent=q?('Chúc '+q+' một mùa Giáng sinh ấm áp và bình an ✨'):'Chúc bạn một mùa Giáng sinh ấm áp và bình an ✨';
+if(q)document.getElementById('to').textContent='Gửi tới '+q;
+const card=document.getElementById('card');
+card.onclick=()=>card.classList.toggle('open');
+
+const bg=document.getElementById('bg'),fx=document.getElementById('fx'),b=bg.getContext('2d'),f=fx.getContext('2d');
+let W,H,G,lights=[],flakes=[],stars=[],lamps=[],bigTree;
+const rnd=(a,c)=>a+Math.random()*(c-a);
+
+function tree(c,x,base,h){
+  const tiers=4,trunk=h*0.1;
+  c.fillStyle='#4a2c17';c.fillRect(x-h*0.035,base-trunk,h*0.07,trunk);
+  const tops=[];
+  for(let i=0;i<tiers;i++){
+    const top=base-trunk-h*0.9+i*h*0.2,bot=top+h*0.38,w=h*(0.17+i*0.07);
+    const g=c.createLinearGradient(x-w,top,x+w,bot);g.addColorStop(0,'#1d6b3a');g.addColorStop(1,'#0b3a22');
+    c.fillStyle=g;c.beginPath();c.moveTo(x,top);c.lineTo(x+w,bot);c.quadraticCurveTo(x,bot-h*0.05,x-w,bot);c.closePath();c.fill();
+    c.fillStyle='#f4f9ff';c.beginPath();c.moveTo(x,top);c.lineTo(x+w*0.5,top+(bot-top)*0.5);
+    for(let k=1;k<=4;k++)c.quadraticCurveTo(x+w*0.5-k*w*0.25+w*0.12,top+(bot-top)*0.7,x+w*0.5-k*w*0.25,top+(bot-top)*0.5);
+    c.closePath();c.fill();
+    tops.push({top,bot,w});
+  }
+  return tops;
+}
+
+function build(){
+  const r=card.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
+  W=r.width-6;H=r.height-6;G=H*0.74;
+  [bg,fx].forEach(c=>{c.width=W*d;c.height=H*d});
+  b.setTransform(d,0,0,d,0,0);f.setTransform(d,0,0,d,0,0);
+  lights=[];lamps=[];stars=[];
+  let g=b.createLinearGradient(0,0,0,H);g.addColorStop(0,'#050b24');g.addColorStop(.55,'#16275c');g.addColorStop(1,'#3b4f8a');
+  b.fillStyle=g;b.fillRect(0,0,W,H);
+  for(let i=0;i<100;i++)stars.push({x:rnd(0,W),y:rnd(0,G*0.7),r:rnd(.4,1.4),p:rnd(0,6)});
+  const mx=W*0.84,my=H*0.24,mr=Math.min(W,H)*0.05;
+  let mg=b.createRadialGradient(mx,my,mr*.4,mx,my,mr*3.5);mg.addColorStop(0,'rgba(255,245,200,.5)');mg.addColorStop(1,'rgba(255,245,200,0)');
+  b.fillStyle=mg;b.fillRect(mx-mr*4,my-mr*4,mr*8,mr*8);
+  b.fillStyle='#fff6d6';b.beginPath();b.arc(mx,my,mr,0,7);b.fill();
+  b.fillStyle='#a9bbe0';b.beginPath();b.moveTo(0,G);
+  for(let x=0;x<=W;x+=20)b.lineTo(x,G-H*0.08-Math.sin(x/W*5)*H*0.03);
+  b.lineTo(W,G);b.fill();
+  for(let i=0;i<14;i++)tree(b,rnd(0,W),G-H*0.02,H*rnd(.12,.2));
+  const hx=W*0.17,hw=Math.min(W*0.22,200),hh=hw*0.6,hy=G+H*0.03-hh;
+  b.fillStyle='#5a3a2a';b.fillRect(hx-hw/2,hy,hw,hh);
+  b.fillStyle='#3d2a3a';b.beginPath();b.moveTo(hx-hw*0.6,hy);b.lineTo(hx,hy-hh*0.6);b.lineTo(hx+hw*0.6,hy);b.fill();
+  b.fillStyle='#f4f9ff';b.beginPath();b.moveTo(hx-hw*0.62,hy+3);b.lineTo(hx,hy-hh*0.64);b.lineTo(hx+hw*0.62,hy+3);b.lineTo(hx+hw*0.5,hy-2);b.lineTo(hx-hw*0.5,hy-2);b.fill();
+  b.fillStyle='#ffd166';b.shadowColor='#ffb347';b.shadowBlur=25;
+  b.fillRect(hx-hw*0.36,hy+hh*0.25,hw*0.22,hw*0.2);b.fillRect(hx+hw*0.14,hy+hh*0.25,hw*0.22,hw*0.2);
+  b.shadowBlur=0;b.fillStyle='#3a2216';b.fillRect(hx-hw*0.07,hy+hh*0.5,hw*0.14,hh*0.5);
+  let gg=b.createLinearGradient(0,G-20,0,H);gg.addColorStop(0,'#e8f0ff');gg.addColorStop(1,'#b9c8ee');
+  b.fillStyle=gg;b.beginPath();b.moveTo(0,G+H*0.02);
+  for(let x=0;x<=W;x+=20)b.lineTo(x,G+H*0.02+Math.sin(x/W*6+1)*H*0.012);
+  b.lineTo(W,H);b.lineTo(0,H);b.fill();
+  [[W*0.34,G+H*0.1,H*0.34],[W*0.68,G+H*0.1,H*0.36],[W*0.93,G+H*0.12,H*0.4]].forEach(t=>tree(b,...t));
+  const bx=W*0.5,bb=G+H*0.2,bh=H*0.62;
+  bigTree=tree(b,bx,bb,bh);
+  bigTree.forEach(t=>{
+    for(let k=-4;k<=4;k++){
+      const dx=k/4*t.w*0.85,y=t.top+(t.bot-t.top)*(Math.abs(dx)/t.w)*0.85+(t.bot-t.top)*0.12+Math.sin(k*1.7)*4;
+      lights.push({x:bx+dx,y,p:rnd(0,6),c:Math.random()<.7?'#ffd34d':'#ffb347',r:Math.max(2.5,bh*0.008)});
+    }
+  });
+  lights.push({x:bx,y:bigTree[0].top-bh*0.03,star:true,p:0,r:bh*0.045});
+  [[-0.1,.045,'#c0392b','#ffd34d'],[0.09,.05,'#2e86de','#fff'],[0.2,.035,'#27ae60','#ffd34d'],[-0.2,.04,'#8e44ad','#fff']].forEach(([o,s,c1,c2])=>{
+    const s2=H*s,gx=bx+W*o*0.8-s2/2,gy=bb-s2*(o>0?0.2:0.6);
+    b.fillStyle=c1;b.fillRect(gx,gy,s2,s2);b.fillStyle=c2;b.fillRect(gx+s2*0.43,gy,s2*0.14,s2);b.fillRect(gx,gy+s2*0.43,s2,s2*0.14);
+  });
+  const fy=G+H*0.1;
+  b.fillStyle='#6b4a32';
+  for(let x=0;x<W;x+=38)b.fillRect(x,fy,8,H*0.09);
+  b.fillRect(0,fy+H*0.02,W,6);
+  b.fillStyle='#f4f9ff';for(let x=0;x<W;x+=38)b.fillRect(x-1,fy-3,10,5);
+  for(let x=10;x<W;x+=26)lights.push({x,y:fy+H*0.012+Math.sin(x/38*Math.PI)*8,p:rnd(0,6),c:'#ffd34d',r:3});
+  [W*0.28,W*0.78].forEach(x=>{
+    const top=G-H*0.05;
+    b.fillStyle='#222';b.fillRect(x-3,top,6,H*0.22);b.fillRect(x-9,top-4,18,6);
+    lamps.push({x,y:top-12});
+  });
+  flakes=[];for(let i=0;i<Math.floor(W*H/5000);i++)flakes.push({x:rnd(0,W),y:rnd(0,H),r:rnd(1,3.6),v:rnd(.4,1.5),a:rnd(0,6),s:rnd(.3,1.1)});
+}
+
+let t=0;
+function draw(){
+  t+=0.016;
+  f.clearRect(0,0,W,H);
+  stars.forEach(s=>{f.globalAlpha=.4+.6*Math.abs(Math.sin(t*1.5+s.p));f.fillStyle='#fff';f.beginPath();f.arc(s.x,s.y,s.r,0,7);f.fill()});
+  f.globalAlpha=1;
+  f.globalCompositeOperation='lighter';
+  lights.forEach(l=>{
+    const k=.55+.45*Math.sin(t*2.2+l.p),R=l.star?l.r*5:l.r*6;
+    const g=f.createRadialGradient(l.x,l.y,0,l.x,l.y,R);
+    g.addColorStop(0,l.star?'rgba(255,240,170,.9)':'rgba(255,200,80,'+(.8*k)+')');g.addColorStop(1,'rgba(255,170,40,0)');
+    f.fillStyle=g;f.beginPath();f.arc(l.x,l.y,R,0,7);f.fill();
+  });
+  lamps.forEach(l=>{
+    const g=f.createRadialGradient(l.x,l.y,0,l.x,l.y+H*0.08,H*0.18);
+    g.addColorStop(0,'rgba(255,214,110,.75)');g.addColorStop(1,'rgba(255,170,40,0)');
+    f.fillStyle=g;f.beginPath();f.arc(l.x,l.y+H*0.04,H*0.18,0,7);f.fill();
+  });
+  f.globalCompositeOperation='source-over';
+  lights.forEach(l=>{
+    f.fillStyle=l.star?'#fff2a8':l.c;f.beginPath();
+    if(l.star){for(let i=0;i<10;i++){const r=i%2?l.r*.45:l.r,a=i*Math.PI/5-Math.PI/2;f.lineTo(l.x+Math.cos(a)*r,l.y+Math.sin(a)*r)}}
+    else f.arc(l.x,l.y,l.r*.6,0,7);
+    f.fill();
+  });
+  lamps.forEach(l=>{f.fillStyle='#fff3b0';f.beginPath();f.arc(l.x,l.y,5,0,7);f.fill()});
+  f.fillStyle='#fff';
+  flakes.forEach(s=>{
+    s.y+=s.v;s.a+=0.012;s.x+=Math.sin(s.a)*s.s+0.25;
+    if(s.y>H+5){s.y=-5;s.x=rnd(0,W)}if(s.x>W+5)s.x=-5;
+    f.globalAlpha=s.r>3?.55:.9;f.shadowColor='#fff';f.shadowBlur=s.r*1.5;
+    f.beginPath();f.arc(s.x,s.y,s.r,0,7);f.fill();
+  });
+  f.shadowBlur=0;f.globalAlpha=1;
+  requestAnimationFrame(draw);
+}
+addEventListener('resize',build);
+build();draw();
+</script>
+</body>
+</html>
