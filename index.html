@@ -1,63 +1,73 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Airplane Heart Smoke Animation</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;
-background:linear-gradient(180deg,#0066ff 0%,#00c6ff 60%,#70e1f5 100%)}
-canvas{position:absolute;inset:0;width:100%;height:100%}
-#plane{position:absolute;font-size:34px;line-height:1;transform-origin:center;pointer-events:none}
-.bird{position:absolute;width:26px;height:10px;border-top:2px solid #123;border-radius:50% 50% 0 0;opacity:.6}
-#hint{position:absolute;bottom:20px;width:100%;text-align:center;color:#fff;font-size:14px;opacity:.8}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffe8ef">
+  <title>Thiệp chúc mừng 20/10 🌷</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<canvas id="c"></canvas>
-<div class="bird" style="left:52%;top:68%"></div>
-<div class="bird" style="left:64%;top:70%;transform:scale(.8)"></div>
-<div id="plane">✈️</div>
-<div id="hint">Chạm vào màn hình để bay lại</div>
-<script>
-const cv=document.getElementById('c'),ctx=cv.getContext('2d'),plane=document.getElementById('plane');
-let W,H,S,T0=0.35,T1=Math.PI*2-0.45,t,prev;
-function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;S=Math.min(W,H)/40;start()}
-function pt(t){
-  const x=16*Math.pow(Math.sin(t),3);
-  const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
-  return{x:W/2+x*S,y:H*0.52-y*S}
-}
-function start(){ctx.clearRect(0,0,W,H);t=T0;prev=pt(t);plane.style.opacity=1}
-function puff(p){
-  const r=S*1.1;
-  for(let i=0;i<3;i++){
-    ctx.beginPath();
-    ctx.arc(p.x+(Math.random()-.5)*r*.6,p.y+(Math.random()-.5)*r*.6,r*(.7+Math.random()*.4),0,7);
-    ctx.fillStyle='rgba(255,255,255,.9)';
-    ctx.shadowColor='#fff';ctx.shadowBlur=S*.9;
-    ctx.fill()
-  }
-}
-function frame(){
-  if(t<T1){
-    for(let i=0;i<3;i++){
-      t+=0.006;
-      const p=pt(t);
-      const d=Math.hypot(p.x-prev.x,p.y-prev.y),n=Math.max(1,Math.ceil(d/(S*.3)));
-      for(let k=1;k<=n;k++)puff({x:prev.x+(p.x-prev.x)*k/n,y:prev.y+(p.y-prev.y)*k/n});
-      const ang=Math.atan2(p.y-prev.y,p.x-prev.x);
-      plane.style.left=(p.x-17)+'px';plane.style.top=(p.y-17)+'px';
-      plane.style.transform='rotate('+(ang+Math.PI/4)+'rad)';
-      prev=p
-    }
-  }else plane.style.opacity=0;
-  requestAnimationFrame(frame)
-}
-addEventListener('resize',resize);
-addEventListener('pointerdown',start);
-resize();frame();
-</script>
+  <div class="petal-layer" id="petalLayer" aria-hidden="true"></div>
+
+  <main class="scene">
+    <p class="top-note">GỬI TẶNG CÁC CHỊ EM Ở MLB  THÂN MẾN</p>
+
+    <section class="envelope-area" id="envelopeArea">
+      <button class="envelope" id="openEnvelope" type="button"
+              aria-label="Mở phong bì thiệp 20 tháng 10" aria-expanded="false">
+        <span class="letter-preview">
+          <span class="preview-date">20/10</span>
+          <span class="preview-flower">🌹</span>
+          <span class="preview-caption">Một lời chúc dành tặng các chị</span>
+        </span>
+        <span class="envelope-back"></span>
+        <span class="envelope-flap"></span>
+        <span class="envelope-front"></span>
+        <span class="envelope-seal">🌹</span>
+      </button>
+      <p class="tap-hint" id="tapHint">Chạm vào phong bì để mở thiệp của Thế Anh</p>
+    </section>
+
+    <section class="greeting-card" id="greetingCard" aria-live="polite" aria-hidden="true">
+      <div class="card-flower">💐 🌷 💐</div>
+      <p class="eyebrow">CHÚC MỪNG</p>
+      <h1>Ngày Phụ nữ<br><span>Việt Nam</span></h1>
+      <div class="date">20 <span>/</span> 10 <b>♥</b></div>
+
+      <div class="wishes" id="wishes">
+        <p class="wish-line">Chúc các chị một ngày 20/10 thật rạng rỡ!</p>
+        <p class="wish-line">Luôn xinh đẹp, tự tin và tràn đầy năng lượng.</p>
+        <p class="wish-line">Chúc công việc thuận lợi, sức khỏe dồi dào,</p>
+        <p class="wish-line">và mỗi ngày đều ngập tràn niềm vui, yêu thương.</p>
+        <p class="wish-line">Chúc cho các chị em ngày nào cũng như hoa .</p>
+      </div>
+
+      <p class="thank-you">Cảm ơn các chị vì luôn mang đến những điều tốt đẹp! 💗</p>
+      <p class="signature">Thân gửi,<br><strong>Em Thế Anh 🌷</strong></p>
+
+      <button class="flower-button" id="flowerButton" type="button">
+        <span aria-hidden="true">💐</span> Nhận hoa từ em Thế Anh
+      </button>
+      <p class="flower-message" id="flowerMessage" role="status"></p>
+      <button class="replay-button" id="replayButton" type="button">↻ Xem lại thiệp</button>
+    </section>
+
+    <section class="gift-page" id="giftPage" aria-hidden="true">
+      <div class="gift-heading">🎁 Một món quà nhỏ dành cho các chị</div>
+      <p class="gift-intro">Hãy nhấn nút bên dưới để bốc thăm ngẫu nhiên nhé!</p>
+      <div class="gift-stage" id="giftStage" aria-live="polite">
+        <div class="gift-box">🎁</div>
+        <p>Món quà bí mật nho nhỏ của em</p>
+      </div>
+      <button class="draw-button" id="drawButton" type="button">✨ Random quà ✨</button>
+      <p class="gift-result" id="giftResult" role="status"></p>
+      <button class="replay-button" id="backToCardButton" type="button">← Quay lại thiệp</button>
+    </section>
+
+    <footer>Được gửi bằng sự trân trọng và yêu thương ♡</footer>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
