@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp 20/10 💐</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600&display=swap&subset=vietnamese" rel="stylesheet">
+<style>
+:root{--rose:#e0457b;--deep:#b3265a;--gold:#f2c46d;--ink:#5a2238;--paper:#fff7f1;--line:#f7e1e6}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Quicksand',system-ui,sans-serif;color:var(--ink);
+background:radial-gradient(ellipse at 50% 0%,#fff0f5 0%,#ffc9db 45%,#ff9dbb 100%);
+display:flex;align-items:center;justify-content:center;
+padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+#petals{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.stage{position:relative;width:min(92vw,440px);height:min(88dvh,660px);display:flex;align-items:center;justify-content:center;z-index:2}
+/* envelope */
+.env{position:absolute;width:min(78vw,320px);aspect-ratio:3/2;cursor:pointer;transition:transform .9s ease,opacity .6s ease;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.env .back{position:absolute;inset:0;background:#d6416f;border-radius:8px;box-shadow:0 14px 30px rgba(150,30,80,.4)}
+.env .front{position:absolute;inset:0;border-radius:8px;background:linear-gradient(135deg,#ff7fa6,#e84a7c);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.env .flap{position:absolute;left:0;top:0;width:100%;height:58%;transform-origin:top;background:#f55f8c;clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .7s ease;z-index:3}
+.env .seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;z-index:4;transition:opacity .3s;
+background:radial-gradient(circle,#ffe6a0,#d9a62e);display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.env .tap{position:absolute;bottom:-36px;width:100%;text-align:center;font-weight:600;color:var(--deep);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.opened .env{animation:none;transform:translateY(120px) scale(.9);opacity:0;pointer-events:none}
+.opened .env .flap{transform:rotateX(180deg)}
+.opened .env .seal,.opened .env .tap{opacity:0}
+/* letter */
+.letter{position:absolute;width:min(92vw,440px);max-height:100%;overflow:auto;background:var(--paper);border-radius:16px;padding:26px 24px 24px;text-align:center;
+border:3px solid var(--gold);box-shadow:0 0 60px rgba(255,255,255,.7),0 20px 50px rgba(150,30,80,.35);
+transform:translateY(60px) scale(.4);opacity:0;pointer-events:none;transition:transform .9s cubic-bezier(.2,.9,.3,1.2) .5s,opacity .5s ease .5s}
+.opened .letter{transform:none;opacity:1;pointer-events:auto}
+.date{font:700 clamp(56px,16vw,76px) 'Dancing Script',cursive;line-height:1;
+background:linear-gradient(135deg,#ff5c8a,#b3265a,#f2a63d);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 6px rgba(224,69,123,.3))}
+.letter h1{font:700 24px 'Dancing Script',cursive;color:var(--deep);margin:2px 0 12px}
+.to{font-weight:600;margin-bottom:8px}
+.wish{line-height:1.65;font-size:15.5px;font-weight:500;margin:0 0 9px;opacity:0}
+.opened .wish{animation:up .8s ease both;animation-delay:calc(1.5s + var(--i)*.9s)}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.sign{font:700 28px 'Dancing Script',cursive;color:var(--rose);margin-top:6px;opacity:0}
+.opened .sign{animation:up .8s ease both;animation-delay:5.3s}
+.btn{margin-top:10px;font:600 16px 'Quicksand',sans-serif;border:0;border-radius:999px;padding:12px 26px;cursor:pointer;color:#fff;
+background:linear-gradient(135deg,#ff6b9a,#e0457b);box-shadow:0 6px 16px rgba(224,69,123,.5);opacity:0;touch-action:manipulation}
+.opened .btn{animation:up .8s ease both;animation-delay:6.1s}
+.final{display:none;margin-top:12px;font:700 clamp(26px,7vw,34px) 'Dancing Script',cursive;line-height:1.25;color:var(--deep);animation:up 1s ease both}
+.sent .btn{display:none}.sent .final{display:block}
+.pop{position:fixed;pointer-events:none;font-size:28px;animation:pop 1.8s ease-out forwards;z-index:9}
+@keyframes pop{to{transform:translate(var(--dx),var(--dy)) rotate(50deg);opacity:0}}
+/* trang bầu trời */
+.sky{position:fixed;inset:0;z-index:4;background:linear-gradient(180deg,#2f9bff 0%,#7cc9ff 45%,#d8f1ff 100%);opacity:0;pointer-events:none;transition:opacity 1.6s ease;overflow:hidden}
+.go .sky{opacity:1;pointer-events:auto}
+.sun{position:absolute;top:7%;right:12%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,#fffbd0 35%,rgba(255,236,130,0) 72%);box-shadow:0 0 80px 40px rgba(255,240,150,.55);animation:glow 4s ease-in-out infinite alternate}
+@keyframes glow{to{transform:scale(1.12)}}
+.cloud{position:absolute;left:-220px;background:#fff;border-radius:60px;opacity:.92;animation:drift linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.c1{top:12%;width:140px;height:40px;animation-duration:70s}
+.c1::before{width:64px;height:64px;top:-30px;left:22px}.c1::after{width:50px;height:50px;top:-20px;left:74px}
+.c2{top:27%;width:110px;height:32px;animation-duration:95s;animation-delay:-40s;opacity:.8}
+.c2::before{width:50px;height:50px;top:-24px;left:16px}.c2::after{width:40px;height:40px;top:-16px;left:58px}
+.c3{top:40%;width:170px;height:46px;animation-duration:120s;animation-delay:-80s;opacity:.7}
+.c3::before{width:76px;height:76px;top:-36px;left:28px}.c3::after{width:58px;height:58px;top:-24px;left:92px}
+@keyframes drift{to{transform:translateX(calc(100vw + 440px))}}
+.bf{position:absolute;font-size:26px;animation:fly 10s ease-in-out infinite}
+.b1{top:52%;left:10%}.b2{top:44%;right:18%;animation-delay:-5s}
+@keyframes fly{0%,100%{transform:translate(0,0) rotate(-10deg)}25%{transform:translate(60px,-34px) rotate(12deg)}50%{transform:translate(120px,8px) rotate(-6deg)}75%{transform:translate(50px,44px) rotate(10deg)}}
+.skytext{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14%);width:100%;text-align:center;padding:0 20px}
+.s1,.s2{opacity:0}
+.s1{font:700 clamp(38px,11vw,68px) 'Dancing Script',cursive;line-height:1.15;color:#fff;text-shadow:0 2px 14px rgba(224,69,123,.75),0 0 30px rgba(255,255,255,.8)}
+.s2{margin-top:10px;font:600 clamp(16px,4vw,22px) 'Quicksand',sans-serif;color:#fff;text-shadow:0 1px 8px rgba(0,60,120,.55)}
+.go .s1{animation:up 1.4s ease 1.2s both}.go .s2{animation:up 1.2s ease 2.3s both}
+#garden{position:absolute;inset:0;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="petals"></canvas>
+<div class="sky" id="sky">
+  <div class="sun"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="bf b1">🦋</div><div class="bf b2">🦋</div>
+  <canvas id="garden"></canvas>
+  <div class="skytext"><div class="s1" id="s1"></div><div class="s2" id="s2"></div></div>
+</div>
+<div class="stage" id="stage">
+  <div class="env" id="env">
+    <div class="back"></div><div class="front"></div><div class="flap"></div>
+    <div class="seal">🌹</div>
+    <div class="tap">Chạm vào đây để nhận quà từ em nha  💐</div>
+  </div>
+  <div class="letter">
+    <div class="date">20/10</div>
+    <h1>Chúc mừng ngày Phụ nữ Việt Nam 💐</h1>
+    <div class="to" id="to"></div>
+    <p class="wish" style="--i:0" id="w0"></p>
+    <p class="wish" style="--i:1" id="w1"></p>
+    <p class="wish" style="--i:2" id="w2"></p>
+    <p class="wish" style="--i:3" id="w3"></p>
+    <div class="sign" id="sign"></div>
+    <button class="btn" id="bt">Nhận hoa từ em nha các chị ơi  💐</button>
+    <div class="final" id="fin"></div>
+  </div>
+</div>
+<script>
+// ====== SỬA LỜI CHÚC Ở ĐÂY ======
+const C={
+  to:'Gửi các chị em ở MLB,',
+  from:'Em Thế Anh nè',
+  w:[
+    'Hôm nay là 20/10, em xin chúc các chị em một ngày thật rạng rỡ, ngập tràn hoa, quà và những lời yêu thương.',
+    'Chúc các chị em luôn xinh đẹp, tươi trẻ và luôn nở nụ cười thật tươi mỗi ngày.',
+    'Chúc các chị em công việc thuận lợi, sức khỏe dồi dào và mọi điều mong muốn đều thành hiện thực.',
+    'Cảm ơn các chị đã luôn tốt với em và làm cho MLB thêm nhiều niềm vui.'
+  ],
+  final:'Chúc các chị em luôn xinh đẹp ạ ✨'
+};
+// ==================================
+const $=id=>document.getElementById(id),p=new URLSearchParams(location.search);
+$('to').textContent=p.get('to')||C.to;
+C.w.forEach((t,i)=>$('w'+i).textContent=t);
+$('sign').textContent='— '+(p.get('from')||C.from)+' 🌷';
+$('fin').textContent=C.final;
+$('s1').textContent=C.final;$('s2').textContent='Chúc mừng 20/10 💐 — '+(p.get('from')||C.from);
+
+$('env').onclick=()=>$('stage').classList.add('opened');
+
+const em=['🌸','🌷','🌹','💐','🌺','✨'];
+$('bt').onclick=()=>{
+  $('stage').classList.add('sent');setTimeout(()=>{document.body.classList.add('go');startGarden()},1100);
+  const r=document.querySelector('.letter').getBoundingClientRect();
+  for(let i=0;i<46;i++){
+    const s=document.createElement('span');s.className='pop';s.textContent=em[i%6];
+    s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top+r.height*.75)+'px';
+    s.style.setProperty('--dx',(Math.random()*2-1)*innerWidth*.5+'px');
+    s.style.setProperty('--dy',(-Math.random()*innerHeight*.7)+'px');
+    s.style.animationDelay=Math.random()*.4+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),2600);
+  }
+};
+
+// cánh hoa rơi
+const cv=$('petals'),x=cv.getContext('2d'),cols=['#ffb6cf','#ff8fb1','#ffd1e0','#ff6f9c','#ffe3ec'];let W,H,ps=[],T=0;
+function mk(init){return{x:Math.random()*W,y:init?Math.random()*H:-20,r:6+Math.random()*10,v:.5+Math.random()*1.2,a:Math.random()*6,s:.5+Math.random()*1.2,rot:Math.random()*6,vr:(Math.random()-.5)*.05,c:cols[Math.random()*5|0]}}
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;ps=[];for(let i=0;i<Math.floor(W*H/14000)+12;i++)ps.push(mk(true))}
+function dr(){T+=.016;x.clearRect(0,0,W,H);const wind=Math.sin(T*.4)*.8;
+  ps.forEach(q=>{q.y+=q.v;q.a+=.02;q.x+=Math.sin(q.a)*q.s+wind;q.rot+=q.vr;
+    if(q.y>H+20)Object.assign(q,mk(false));if(q.x>W+20)q.x=-20;if(q.x<-20)q.x=W+20;
+    x.save();x.translate(q.x,q.y);x.rotate(q.rot);x.scale(1,.55+.45*Math.abs(Math.sin(q.a)));
+    x.fillStyle=q.c;x.globalAlpha=.88;x.beginPath();x.moveTo(0,-q.r);
+    x.bezierCurveTo(q.r,-q.r*.6,q.r*.7,q.r*.7,0,q.r);x.bezierCurveTo(-q.r*.7,q.r*.7,-q.r,-q.r*.6,0,-q.r);x.fill();x.restore()});
+  requestAnimationFrame(dr)}
+addEventListener('resize',rs);rs();dr();
+
+// vườn hoa đung đưa trong gió
+function startGarden(){
+  if(window._g)return;window._g=1;
+  const gc=$('garden'),g=gc.getContext('2d'),hc=['#ff7aa8','#ffffff','#ffd54a','#ff9a7a','#e56bd0','#ffb6cf'];
+  let GW,GH,fs=[],gt=0;
+  function gr(){const d=Math.min(devicePixelRatio||1,2);GW=innerWidth;GH=innerHeight;gc.width=GW*d;gc.height=GH*d;g.setTransform(d,0,0,d,0,0);
+    fs=[];const n=Math.max(8,Math.floor(GW/46));
+    for(let i=0;i<n;i++)fs.push({x:(i+.5)*GW/n+(Math.random()-.5)*20,h:GH*(.14+Math.random()*.26),r:10+Math.random()*12,c:hc[i%6],ph:Math.random()*6,sw:.5+Math.random()*.6,rot:Math.random()*6})}
+  function flower(f){
+    const base=GH+4,sway=Math.sin(gt*f.sw+f.ph)*(10+f.h*.06),tx=f.x+sway,ty=base-f.h;
+    g.strokeStyle='#2f9e44';g.lineWidth=3;g.beginPath();g.moveTo(f.x,base);g.quadraticCurveTo(f.x+sway*.2,base-f.h*.55,tx,ty);g.stroke();
+    g.fillStyle='#43b85a';
+    [[.35,1],[.55,-1]].forEach(([t,s])=>{const lx=f.x+(tx-f.x)*t*.9,ly=base-f.h*t;g.save();g.translate(lx,ly);g.rotate(s*(.9+Math.sin(gt*1.3+f.ph)*.15));g.beginPath();g.ellipse(s*10,0,12,4.5,0,0,7);g.fill();g.restore()});
+    g.save();g.translate(tx,ty);g.rotate(f.rot+Math.sin(gt*.8+f.ph)*.2);g.fillStyle=f.c;
+    for(let k=0;k<6;k++){g.rotate(Math.PI/3);g.beginPath();g.ellipse(f.r*.6,0,f.r*.62,f.r*.34,0,0,7);g.fill()}
+    g.fillStyle='#ffcc33';g.beginPath();g.arc(0,0,f.r*.28,0,7);g.fill();g.restore()}
+  function gl(){gt+=.016;g.clearRect(0,0,GW,GH);
+    const hg=g.createLinearGradient(0,GH*.84,0,GH);hg.addColorStop(0,'#86e093');hg.addColorStop(1,'#3aa655');
+    g.fillStyle=hg;g.beginPath();g.moveTo(0,GH);
+    for(let xx=0;xx<=GW+20;xx+=20)g.lineTo(xx,GH*.91+Math.sin(xx/GW*4)*GH*.02);
+    g.lineTo(GW,GH);g.fill();
+    g.strokeStyle='#4fc26b';g.lineWidth=2;g.beginPath();
+    for(let xx=0;xx<GW;xx+=11){const by=GH*.93+Math.sin(xx/GW*4)*GH*.02;g.moveTo(xx,GH);g.quadraticCurveTo(xx,by,xx+Math.sin(gt*1.4+xx)*6,by-14)}
+    g.stroke();
+    fs.forEach(flower);requestAnimationFrame(gl)}
+  gr();addEventListener('resize',gr);gl();
+}
+</script>
+</body>
+</html>
