@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#faf7f2">
+<title>Một chút yêu thương | 20/10</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
+
+:root {
+  --paper: #faf7f2;
+  --white: #fffdf9;
+  --ink: #343a32;
+  --muted: #85877c;
+  --green: #687b62;
+  --pink: #e7a9ad;
+  --line: #e9e2d8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.topbar {
+  width: min(1080px, 90%);
+  min-height: 75px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.brand span { color: var(--green); }
+
+.music-button {
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: transparent;
+  font-size: 12px;
+}
+
+.music-button:hover { background: #eee9df; }
+
+.main {
+  width: min(680px, 90%);
+  margin: auto;
+  padding: 50px 0 65px;
+}
+
+.page {
+  display: none;
+  text-align: center;
+  animation: fadeIn .65s ease;
+}
+
+.page.active { display: block; }
+
+.eyebrow {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.8;
+}
+
+h1, h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: clamp(36px, 7vw, 60px);
+  line-height: 1.2;
+  letter-spacing: -1.5px;
+  margin: 22px 0 16px;
+}
+
+h1 em, h2 em { color: var(--green); }
+
+.subtitle {
+  max-width: 390px;
+  margin: auto;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.name-form {
+  max-width: 450px;
+  margin: 30px auto 0;
+  text-align: left;
+}
+
+.name-form label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.input-row input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: none;
+  padding: 10px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.primary-button {
+  border: 0;
+  border-radius: 7px;
+  padding: 13px 18px;
+  background: var(--green);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  transition: .2s;
+  white-space: nowrap;
+}
+
+.primary-button:hover {
+  background: #4f624a;
+  transform: translateY(-1px);
+}
+
+.envelope-wrap { margin-top: 55px; }
+
+.envelope-button {
+  display: block;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.envelope-button:disabled {
+  cursor: default;
+  opacity: .75;
+}
+
+.envelope {
+  position: relative;
+  width: 250px;
+  height: 165px;
+  margin: auto;
+  filter: drop-shadow(0 15px 16px #5b4f591c);
+  transition: transform .3s;
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background: #d7b8a9;
+  border-radius: 5px;
+}
+
+.letter-preview {
+  position: absolute;
+  z-index: 1;
+  bottom: 5px;
+  left: 8%;
+  width: 84%;
+  height: 135px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  background: #fffdf8;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+  transition: transform .8s ease;
+}
+
+.mini-flower { color: var(--pink); font-size: 38px; }
+
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #e4c6b8;
+  clip-path: polygon(0 0, 50% 57%, 100% 0, 100% 100%, 0 100%);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 0;
+  height: 0;
+  border-left: 125px solid transparent;
+  border-right: 125px solid transparent;
+  border-top: 90px solid #caa493;
+  transform-origin: top center;
+  transition: transform .65s ease;
+}
+
+.seal {
+  position: absolute;
+  z-index: 5;
+  top: 69px;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  color: white;
+  background: var(--green);
+  transition: opacity .3s;
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 0;
+}
+
+.envelope.open .letter-preview {
+  transform: translateY(-95px);
+  z-index: 5;
+}
+
+.envelope.open .seal { opacity: 0; }
+
+.envelope-hint {
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.tiny-note {
+  margin-top: 40px;
+  color: #a7a296;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.letter-card {
+  max-width: 580px;
+  margin: auto;
+  padding: clamp(25px, 6vw, 50px);
+  border: 1px solid var(--line);
+  background: var(--white);
+  box-shadow: 0 20px 60px #42433012;
+}
+
+.letter-flower {
+  margin: 20px 0 8px;
+  color: var(--pink);
+  font-size: 48px;
+}
+
+.letter-date {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.letter-card h2 {
+  font-size: clamp(30px, 6vw, 42px);
+  line-height: 1.3;
+}
+
+.letter-card h2 em { overflow-wrap: anywhere; }
+
+.letter-content {
+  color: #67685f;
+  font-size: 13px;
+  line-height: 2;
+  text-align: left;
+}
+
+.letter-signature {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 30px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.letter-signature strong { color: var(--green); }
+
+.bouquet { margin: 20px 0; font-size: 70px; }
+
+.letter-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.status-message {
+  min-height: 18px;
+  color: var(--green);
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  padding: 15px 20px 25px;
+  color: #a7a296;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.petal-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.petal {
+  position: absolute;
+  top: -35px;
+  color: #df9ca7;
+  animation: falling linear forwards;
+}
+
+@keyframes falling {
+  to {
+    transform: translate(var(--drift), 110vh) rotate(600deg);
+    opacity: .1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .main { padding-top: 38px; }
+  .input-row { flex-direction: column; }
+  .input-row .primary-button { width: 100%; }
+  .letter-card { padding: 25px 20px; }
+  .envelope { transform: scale(.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="petal-layer" id="petalLayer"></div>
+
+<header class="topbar">
+  <div class="brand"><span>✳</span> little note</div>
+  <button class="music-button" id="musicButton" type="button">
+    ♫ <span id="musicLabel">Bật piano</span>
+  </button>
+</header>
+
+<main class="main">
+  <section class="page active" id="homePage">
+    <p class="eyebrow">20 . 10 — VIETNAMESE WOMEN'S DAY</p>
+    <h1>Một chút yêu thương,<br><em>gửi đến bạn.</em></h1>
+    <p class="subtitle">
+      Có một lời chúc nhỏ đang chờ bạn mở ra.
+      Hãy cho mình biết tên của bạn nhé.
+    </p>
+
+    <form class="name-form" id="nameForm">
+      <label for="recipientName">Lời chúc này gửi đến</label>
+      <div class="input-row">
+        <input id="recipientName" type="text" maxlength="40"
+          placeholder="Tên của bạn..." autocomplete="given-name" required>
+        <button class="primary-button" type="submit">Nhận thiệp ↗</button>
+      </div>
+    </form>
+
+    <div class="envelope-wrap">
+      <button class="envelope-button" id="envelopeButton"
+        type="button" aria-label="Mở phong bì" disabled>
+        <div class="envelope" id="envelope">
+          <div class="envelope-back"></div>
+          <div class="letter-preview">
+            <span class="mini-flower">✿</span>
+            <span>FOR SOMEONE SPECIAL</span>
+          </div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap"></div>
+          <div class="seal">✳</div>
+        </div>
+      </button>
+      <p class="envelope-hint" id="envelopeHint">Nhập tên để mở phong bì</p>
+    </div>
+
+    <p class="tiny-note">made with a little bit of love ♡</p>
+  </section>
+
+  <section class="page" id="letterPage">
+    <article class="letter-card">
+      <p class="eyebrow">A LITTLE NOTE FOR YOU</p>
+      <div class="letter-flower">✿</div>
+      <p class="letter-date">Ngày 20 tháng 10</p>
+      <h2>Gửi <em id="displayName">bạn</em>,</h2>
+
+      <div class="letter-content">
+        <p>
+          Chúc bạn có một ngày 20/10 thật dịu dàng,
+          nhiều niềm vui và những điều dễ thương.
+        </p>
+        <p>
+          Mong bạn luôn được yêu thương, được lắng nghe,
+          được làm những điều mình thích và có đủ can đảm
+          để theo đuổi những điều khiến trái tim mình hạnh phúc.
+        </p>
+        <p>
+          Dù hôm nay bận rộn hay bình thường như bao ngày,
+          hãy nhớ dành cho bản thân một chút thời gian,
+          một nụ cười và một lời khen nhé.
+        </p>
+      </div>
+
+      <div class="letter-signature">
+        <span>Gửi bạn những điều tốt đẹp nhất,</span>
+        <strong>Mai Thế Anh ♡</strong>
+      </div>
+
+      <div class="bouquet">💐</div>
+
+      <div class="letter-actions">
+        <button class="primary-button" id="shareButton" type="button">
+          Chia sẻ thiệp ↗
+        </button>
+        <button class="text-button" id="againButton" type="button">
+          Gửi lời chúc cho người khác
+        </button>
+      </div>
+      <p class="status-message" id="statusMessage" role="status"></p>
+    </article>
+  </section>
+</main>
+
+<footer class="footer">
+  20/10 · Mong bạn luôn rực rỡ theo cách riêng của mình.
+</footer>
+
+<script>
+/* =========================
+   PHẦN 1: NHẬN TÊN VÀ MỞ THIỆP
+========================= */
+const nameForm = document.getElementById('nameForm');
+const nameInput = document.getElementById('recipientName');
+const envelopeButton = document.getElementById('envelopeButton');
+const envelope = document.getElementById('envelope');
+const envelopeHint = document.getElementById('envelopeHint');
+const displayName = document.getElementById('displayName');
+const homePage = document.getElementById('homePage');
+const letterPage = document.getElementById('letterPage');
+const statusMessage = document.getElementById('statusMessage');
+
+let recipient = '';
+let opening = false;
+
+function setRecipient(name) {
+  recipient = name.trim().slice(0, 40);
+  if (!recipient) return false;
+
+  displayName.textContent = recipient;
+  nameInput.value = recipient;
+  envelopeButton.disabled = false;
+  envelopeHint.textContent = 'Nhấn vào phong bì để mở thiệp ♡';
+
+  // Thêm tên người nhận vào đường link
+  const url = new URL(window.location.href);
+  url.searchParams.set('to', recipient);
+  window.history.replaceState({}, '', url);
+
+  return true;
+}
+
+nameForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const name = nameInput.value.trim();
+
+  if (!name) {
+    nameInput.focus();
+    return;
+  }
+
+  setRecipient(name);
+  envelopeHint.textContent = 'Tên đã sẵn sàng — nhấn vào phong bì nhé ♡';
+});
+
+envelopeButton.addEventListener('click', function() {
+  if (!recipient || opening) return;
+
+  opening = true;
+  envelope.classList.add('open');
+  envelopeHint.textContent = 'Một chút yêu thương đang đến với bạn...';
+
+  setTimeout(() => {
+    homePage.classList.remove('active');
+    letterPage.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    opening = false;
+  }, 850);
+});
+
+// Nếu mở thiệp bằng link có ?to=Tên
+const params = new URLSearchParams(window.location.search);
+const sharedName = params.get('to');
+
+if (sharedName && sharedName.trim()) {
+  setRecipient(sharedName);
+}
+
+/* =========================
+   PHẦN 2: CHIA SẺ THIỆP
+========================= */
+document.getElementById('shareButton').addEventListener('click', async function() {
+  if (!recipient) return;
+
+  const shareUrl = new URL(window.location.href);
+  shareUrl.searchParams.set('to', recipient);
+
+  const link = shareUrl.href;
+  const shareData = {
+    title: 'Một chút yêu thương | 20/10',
+    text: 'Mình gửi bạn một tấm thiệp nhỏ nhân ngày 20/10 ♡',
+    url: link
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      statusMessage.textContent = 'Đã mở bảng chia sẻ thiệp ♡';
+    } else if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(link);
+      statusMessage.textContent = 'Đã sao chép link thiệp! Hãy gửi cho người bạn muốn chúc ♡';
+    } else {
+      window.prompt('Sao chép đường link thiệp này:', link);
+      statusMessage.textContent = 'Hãy sao chép link để gửi cho người nhận nhé.';
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      statusMessage.textContent = 'Chưa chia sẻ được. Bạn hãy thử lại nhé.';
+    }
+  }
+});
+
+/* =========================
+   PHẦN 3: GỬI THIỆP CHO NGƯỜI KHÁC
+========================= */
+document.getElementById('againButton').addEventListener('click', function() {
+  recipient = '';
+  opening = false;
+
+  envelope.classList.remove('open');
+  nameInput.value = '';
+  envelopeButton.disabled = true;
+  envelopeHint.textContent = 'Nhập tên để mở phong bì';
+  statusMessage.textContent = '';
+
+  letterPage.classList.remove('active');
+  homePage.classList.add('active');
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete('to');
+  window.history.replaceState({}, '', url);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  nameInput.focus();
+});
+
+/* =========================
+   PHẦN 4: CÁNH HOA RƠI
+========================= */
+const petalLayer = document.getElementById('petalLayer');
+
+function createPetal() {
+  const petal = document.createElement('span');
+  petal.className = 'petal';
+  petal.textContent = ['✿', '❀', '❋', '✽'][Math.floor(Math.random() * 4)];
+
+  petal.style.left = Math.random() * 100 + 'vw';
+  petal.style.fontSize = (10 + Math.random() * 13) + 'px';
+  petal.style.opacity = (0.3 + Math.random() * 0.55).toString();
+
+  const duration = 7 + Math.random() * 8;
+  petal.style.animationDuration = duration + 's';
+  petal.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+
+  petalLayer.appendChild(petal);
+  setTimeout(() => petal.remove(), duration * 1000);
+}
+
+for (let i = 0; i < 12; i++) {
+  setTimeout(createPetal, i * 250);
+}
+
+setInterval(createPetal, 650);
+
+/* =========================
+   PHẦN 5: NHẠC PIANO NGUYÊN BẢN
+========================= */
+const musicButton = document.getElementById('musicButton');
+const musicLabel = document.getElementById('musicLabel');
+
+let audioCtx = null;
+let master = null;
+let isPlaying = false;
+let loopTimer = null;
+let activeNodes = [];
+
+const bpm = 76;
+const beat = 60 / bpm;
+const bar = beat * 4;
+const loopLength = bar * 4;
+
+// Giai điệu tự sáng tác, mang cảm giác dịu dàng và hoài niệm
+const melody = [
+  [0, 69], [1, 72], [2, 76], [3, 72],
+  [4, 67], [5, 71], [6, 74], [7, 71],
+  [8, 65], [9, 69], [10, 72], [11, 69],
+  [12, 64], [13, 67], [14, 71], [15, 67],
+  [16, 69], [18, 72], [20, 76], [22, 77],
+  [24, 76], [26, 72], [28, 71], [30, 69]
+];
+
+const chords = [
+  [57, 60, 64, 69], // Am
+  [55, 59, 62, 67], // G
+  [53, 57, 60, 65], // F
+  [52, 55, 59, 64]  // Em
+];
+
+function midiToHz(midi) {
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+
+function tone(freq, start, duration, volume, type = 'sine') {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, start);
+
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.exponentialRampToValueAtTime(
+    Math.max(volume, 0.002), start + 0.04
+  );
+  gain.gain.exponentialRampToValueAtTime(
+    0.001, start + duration
+  );
+
+  osc.connect(gain);
+  gain.connect(master);
+
+  osc.onended = () => {
+    activeNodes = activeNodes.filter(node => node !== osc);
+    osc.disconnect();
+    gain.disconnect();
+  };
+
+  osc.start(start);
+  osc.stop(start + duration + 0.05);
+  activeNodes.push(osc);
+}
+
+function playPhrase(start) {
+  // Hợp âm nền ngân dài
+  chords.forEach((chord, i) => {
+    chord.forEach((note, j) => {
+      tone(
+        midiToHz(note),
+        start + i * bar,
+        bar * 0.92,
+        j === 0 ? 0.035 : 0.018,
+        'sine'
+      );
+    });
+  });
+
+  // Giai điệu chính
+  melody.forEach(([step, note]) => {
+    const time = start + step * beat / 2;
+    tone(midiToHz(note), time, beat * 0.85, 0.11, 'triangle');
+
+    if (step % 4 === 0) {
+      tone(midiToHz(note + 12), time, beat * 0.55, 0.018);
+    }
+  });
+
+  // Nốt trầm rải đều
+  for (let i = 0; i < 16; i++) {
+    const chord = chords[Math.floor(i / 4)];
+    const note = chord[i % 4];
+
+    tone(
+      midiToHz(note - 12),
+      start + i * beat,
+      beat * 0.7,
+      0.045
+    );
+  }
+}
+
+function startMusic() {
+  if (!audioCtx) {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      musicLabel.textContent = 'Không hỗ trợ';
+      return;
+    }
+
+    audioCtx = new AudioContextClass();
+    master = audioCtx.createGain();
+    master.gain.value = 0.55;
+    master.connect(audioCtx.destination);
+  }
+
+  audioCtx.resume().then(() => {
+    if (isPlaying) return;
+
+    isPlaying = true;
+    musicLabel.textContent = 'Tắt piano';
+
+    let nextStart = audioCtx.currentTime + 0.15;
+
+    function scheduleLoop() {
+      if (!isPlaying) return;
+
+      playPhrase(nextStart);
+      nextStart += loopLength;
+
+      const wait = Math.max(
+        100,
+        (nextStart - audioCtx.currentTime - 0.3) * 1000
+      );
+
+      loopTimer = setTimeout(scheduleLoop, wait);
+    }
+
+    scheduleLoop();
+  }).catch(() => {
+    musicLabel.textContent = 'Thử lại';
+  });
+}
+
+function stopMusic() {
+  isPlaying = false;
+  clearTimeout(loopTimer);
+  musicLabel.textContent = 'Bật piano';
+
+  if (master && audioCtx) {
+    master.gain.cancelScheduledValues(audioCtx.currentTime);
+    master.gain.setTargetAtTime(0.001, audioCtx.currentTime, 0.08);
+  }
+
+  setTimeout(() => {
+    if (!isPlaying && audioCtx && master) {
+      activeNodes.forEach(node => {
+        try { node.stop(); } catch (error) {}
+      });
+
+      activeNodes = [];
+      master.gain.cancelScheduledValues(audioCtx.currentTime);
+      master.gain.value = 0.55;
+    }
+  }, 350);
+}
+
+musicButton.addEventListener('click', function() {
+  if (isPlaying) {
+    stopMusic();
+  } else {
+    startMusic();
+  }
+});
+</script>
+
+</body>
+</html>
