@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bảng chấm công thợ xây</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9e7e2;--surface:#fbfaf7;--ink:#23262b;--mute:#6b6f76;--line:#cfccc4;--accent:#f2b705;--accent-ink:#23262b;--full:#2f7d4f;--half:#c77d0a;--off:#b4443a;--sun:#efe3e1;--today:#fff3c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d21;--surface:#25282d;--ink:#eceae4;--mute:#9a9ea6;--line:#3a3e45;--accent:#f2b705;--accent-ink:#1b1d21;--full:#5bc487;--half:#f0b04a;--off:#ee7a70;--sun:#3a2f2f;--today:#4a4120}}
+:root[data-theme="dark"]{--bg:#1b1d21;--surface:#25282d;--ink:#eceae4;--mute:#9a9ea6;--line:#3a3e45;--accent:#f2b705;--accent-ink:#1b1d21;--full:#5bc487;--half:#f0b04a;--off:#ee7a70;--sun:#3a2f2f;--today:#4a4120}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between;border-bottom:6px solid var(--accent);padding-bottom:14px;margin-bottom:18px}
+h1{margin:0;font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:2px 0 0;font-size:14px}
+.period{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select,input,button{font:inherit;color:inherit}
+select,input{background:var(--surface);border:1.5px solid var(--line);border-radius:6px;padding:9px 10px}
+select:focus-visible,input:focus-visible,button:focus-visible,.cell:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+button{cursor:pointer;border:0;border-radius:6px;padding:10px 16px;font-weight:700;background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);font-weight:500}
+button.del{background:transparent;color:var(--off);padding:4px 8px;font-weight:500}
+form.add{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
+form.add label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
+form.add button{align-self:end}
+.legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:14px;margin:0 0 10px;color:var(--mute)}
+.legend b{display:inline-block;min-width:26px;text-align:center;border-radius:4px;padding:1px 6px;color:#fff}
+.tablebox{overflow-x:auto;background:var(--surface);border:1.5px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:max-content}
+th,td{border:1px solid var(--line);text-align:center;padding:0;font-size:13px}
+thead th{padding:6px 2px;background:var(--bg);font-weight:700}
+thead th small{display:block;font-weight:400;color:var(--mute);font-size:11px}
+th.sun,td.sun{background:var(--sun)}
+th.today,td.today{background:var(--today)}
+th.who,td.who{text-align:left;padding:8px 12px;min-width:190px;position:sticky;left:0;background:var(--surface);z-index:1;border-right:2px solid var(--ink)}
+thead th.who{background:var(--bg)}
+td.who strong{display:block}
+td.who span{color:var(--mute);font-size:12px}
+.cell{width:34px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;font-weight:700;margin:0}
+td.c{padding:0}
+.v1{color:var(--full)}.v05{color:var(--half)}.v0{color:var(--off)}
+.tot{min-width:70px;font-weight:800;font-size:15px;padding:0 8px}
+.empty{padding:36px 16px;text-align:center;color:var(--mute)}
+.note{color:var(--mute);font-size:13px;margin-top:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.wg{width:120px;text-align:right;padding:6px 8px}
+.h2{font-size:20px;font-weight:800;margin:30px 0 10px}
+#summary th,#summary td{padding:9px 12px}#summary .sl{text-align:left}#summary td.n{font-weight:800;font-size:15px}#summary tfoot td{background:var(--bg);font-weight:800}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90%;text-align:center}.toast.show{opacity:1}
+@media (max-width:640px){form.add{grid-template-columns:1fr}th.who,td.who{min-width:130px}}
+@media print{body{background:#fff}form.add,.actions,.legend,.period,.note,button.del{display:none}.tablebox{border:0;overflow:visible}th.who,td.who{position:static}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Bảng chấm công thợ xây</h1>
+    <p class="sub" id="subtitle"></p>
+  </div>
+  <div class="period">
+    <button class="ghost" id="prev" aria-label="Tháng trước">‹ Tháng trước</button>
+    <select id="month" aria-label="Tháng"></select>
+    <select id="year" aria-label="Năm"></select>
+    <button class="ghost" id="next" aria-label="Tháng sau">Tháng sau ›</button>
+  </div>
+</header>
+
+<form class="add" id="addForm">
+  <label>Họ và tên<input id="name" required placeholder="Nguyễn Văn A" autocomplete="off"></label>
+  <label>Số điện thoại<input id="phone" required inputmode="tel" pattern="[0-9 .+\-]{8,15}" placeholder="0912 345 678" autocomplete="off"></label>
+  <label>Lương mỗi ngày (đ)<input id="wage" type="number" min="0" step="1000" inputmode="numeric" placeholder="350000"></label>
+  <div style="display:flex;gap:8px;align-self:end"><button type="submit" id="saveBtn">Thêm thợ</button><button type="button" class="ghost" id="cancelBtn" hidden>Hủy</button></div>
+</form>
+
+<p class="legend">Bấm vào ô để chấm:
+  <span><b style="background:var(--full)">X</b> Đủ công (1)</span>
+  <span><b style="background:var(--half)">½</b> Nửa công (0,5)</span>
+  <span><b style="background:var(--off)">P</b> Nghỉ</span>
+</p>
+
+<div class="tablebox"><table id="sheet"></table></div>
+
+<h2 class="h2">Tổng hợp công tháng <span id="sumMonth"></span></h2>
+<div class="tablebox"><table id="summary"></table></div>
+
+<div id="toast" class="toast" role="status"></div>
+<div class="actions">
+  <button id="today">Chấm đủ công hôm nay cho tất cả</button>
+  <button class="ghost" id="print">In bảng chấm công</button>
+</div>
+<p class="note">Dữ liệu được lưu trên trình duyệt của thiết bị này. Danh sách thợ dùng chung cho mọi tháng; công được lưu riêng theo từng tháng.</p>
+</div>
+
+<script>
+const KEY="chamcong-v1";
+let state={workers:[],att:{}};
+try{const s=localStorage.getItem(KEY);if(s)state=JSON.parse(s)||state}catch(e){}
+if(!state.workers)state.workers=[];if(!state.att)state.att={};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+const now=new Date();
+let cur={m:now.getMonth()+1,y:now.getFullYear()};
+const $=id=>document.getElementById(id);
+const DOW=["CN","T2","T3","T4","T5","T6","T7"];
+const key=()=>cur.y+"-"+String(cur.m).padStart(2,"0");
+const dim=()=>new Date(cur.y,cur.m,0).getDate();
+
+const mSel=$("month"),ySel=$("year");
+for(let i=1;i<=12;i++)mSel.add(new Option("Tháng "+i,i));
+for(let y=now.getFullYear()-3;y<=now.getFullYear()+2;y++)ySel.add(new Option("Năm "+y,y));
+mSel.onchange=()=>{cur.m=+mSel.value;render()};
+ySel.onchange=()=>{cur.y=+ySel.value;render()};
+function shift(d){cur.m+=d;if(cur.m<1){cur.m=12;cur.y--}if(cur.m>12){cur.m=1;cur.y++}
+  if(![...ySel.options].some(o=>+o.value===cur.y))ySel.add(new Option("Năm "+cur.y,cur.y));render()}
+$("prev").onclick=()=>shift(-1);$("next").onclick=()=>shift(1);
+
+const NEXT={"":"1","1":"0.5","0.5":"0","0":""};
+const SHOW={"1":["X","v1"],"0.5":["½","v05"],"0":["P","v0"]};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function total(id){const a=(state.att[key()]||{})[id]||{};let t=0;for(const d in a)t+=parseFloat(a[d])||0;return t}
+const fmt=n=>String(n).replace(".",",");
+const money=n=>Math.round(n).toLocaleString("vi-VN");
+$("summary").addEventListener("change",e=>{const i=e.target.closest("[data-wage]");if(!i)return;const w=state.workers.find(x=>x.id===i.dataset.wage);if(!w)return;w.wage=Math.max(0,parseFloat(i.value)||0);save();let M=0;state.workers.forEach(x=>{const a=total(x.id)*(x.wage||0);M+=a;const c=$("amt-"+x.id);if(c)c.textContent=money(a)});$("amtAll").textContent=money(M)});
+
+function render(){
+  mSel.value=cur.m;ySel.value=cur.y;
+  const n=dim(),att=state.att[key()]||{};
+  const isNow=cur.m===now.getMonth()+1&&cur.y===now.getFullYear();
+  $("subtitle").textContent="Tháng "+cur.m+" năm "+cur.y+" · "+state.workers.length+" thợ";
+  let h="<thead><tr><th class='who'>Họ tên / Số điện thoại</th>";
+  for(let d=1;d<=n;d++){
+    const w=new Date(cur.y,cur.m-1,d).getDay();
+    h+=`<th class="${w===0?"sun":""} ${isNow&&d===now.getDate()?"today":""}" title="Ngày ${d}/${cur.m}/${cur.y}">${d}<small>${DOW[w]}</small></th>`;
+  }
+  h+="<th class='tot'>Tổng công</th><th></th></tr></thead><tbody>";
+  if(!state.workers.length){
+    h+=`<tr><td class="empty" colspan="${n+3}">Chưa có thợ nào. Nhập họ tên và số điện thoại ở trên để bắt đầu chấm công.</td></tr>`;
+  }
+  for(const w of state.workers){
+    h+=`<tr><td class="who"><strong>${esc(w.name)}</strong><span>${esc(w.phone)}</span></td>`;
+    for(let d=1;d<=n;d++){
+      const v=(att[w.id]||{})[d]||"";const s=SHOW[v];
+      const wd=new Date(cur.y,cur.m-1,d).getDay();
+      h+=`<td class="c ${wd===0?"sun":""} ${isNow&&d===now.getDate()?"today":""}"><div class="cell ${s?s[1]:""}" tabindex="0" role="button" data-w="${w.id}" data-d="${d}" aria-label="${esc(w.name)} ngày ${d}/${cur.m}/${cur.y}">${s?s[0]:""}</div></td>`;
+    }
+    h+=`<td class="tot" id="t-${w.id}">${fmt(total(w.id))}</td><td style="white-space:nowrap"><button class="del" data-edit="${w.id}" style="color:var(--ink)">Sửa</button><button class="del" data-del="${w.id}">Xóa</button></td></tr>`;
+  }
+  $("sheet").innerHTML=h+"</tbody>";renderSummary();
+}
+
+function renderSummary(){
+  const att=state.att[key()]||{};
+  $("sumMonth").textContent=cur.m+"/"+cur.y;
+  let h="<thead><tr><th class='sl'>STT</th><th class='sl'>Họ và tên</th><th class='sl'>Số điện thoại</th><th>Đủ công (ngày)</th><th>Nửa công (ngày)</th><th>Nghỉ (ngày)</th><th>Tổng công</th><th>Lương/ngày (đ)</th><th>Thành tiền (đ)</th></tr></thead><tbody>";
+  let T=0,M=0;
+  if(!state.workers.length)h+="<tr><td class='empty' colspan='9'>Chưa có thợ nào.</td></tr>";
+  state.workers.forEach((w,i)=>{
+    const a=att[w.id]||{};let f=0,hf=0,o=0;
+    for(const d in a){if(a[d]==="1")f++;else if(a[d]==="0.5")hf++;else if(a[d]==="0")o++}
+    const t=f+hf*0.5;T+=t;const amt=t*(w.wage||0);M+=amt;
+    h+=`<tr><td>${i+1}</td><td class="sl"><strong>${esc(w.name)}</strong></td><td class="sl">${esc(w.phone)}</td><td>${f}</td><td>${hf}</td><td>${o}</td><td class="n">${fmt(t)}</td><td><input class="wg" type="number" min="0" step="1000" inputmode="numeric" placeholder="0" value="${w.wage||""}" data-wage="${w.id}" aria-label="Lương ngày của ${esc(w.name)}"></td><td class="n" id="amt-${w.id}">${money(amt)}</td></tr>`;
+  });
+  h+=`</tbody><tfoot><tr><td colspan="6" class="sl">Tổng công cả tổ</td><td>${fmt(T)}</td><td></td><td id="amtAll">${money(M)}</td></tr></tfoot>`;
+  $("summary").innerHTML=h;
+}
+
+function toggle(el){
+  const w=el.dataset.w,d=el.dataset.d,k=key();
+  state.att[k]=state.att[k]||{};state.att[k][w]=state.att[k][w]||{};
+  const nv=NEXT[state.att[k][w][d]||""];
+  if(nv==="")delete state.att[k][w][d];else state.att[k][w][d]=nv;
+  const s=SHOW[nv];el.className="cell "+(s?s[1]:"");el.textContent=s?s[0]:"";
+  $("t-"+w).textContent=fmt(total(w));save();renderSummary();
+}
+$("sheet").addEventListener("click",e=>{
+  const c=e.target.closest(".cell");if(c)return toggle(c);
+  const ed=e.target.closest("[data-edit]");
+  if(ed){const w=state.workers.find(x=>x.id===ed.dataset.edit);if(!w)return;
+    editId=w.id;$("name").value=w.name;$("phone").value=w.phone;$("wage").value=w.wage||"";
+    $("saveBtn").textContent="Lưu thay đổi";$("cancelBtn").hidden=false;
+    $("addForm").scrollIntoView({behavior:"smooth",block:"center"});$("name").focus();
+    return toast("Đang sửa thông tin: "+w.name)}
+  const b=e.target.closest("[data-del]");
+  if(b){const w=state.workers.find(x=>x.id===b.dataset.del);
+    if(!w)return;
+    if(b.dataset.sure!=="1"){b.dataset.sure="1";b.textContent="Bấm lần nữa để xóa";setTimeout(()=>{b.dataset.sure="";b.textContent="Xóa"},3000);return}
+    state.workers=state.workers.filter(x=>x.id!==w.id);
+    for(const k in state.att)delete state.att[k][w.id];if(editId===w.id)endEdit();save();render();toast("Đã xóa "+w.name)}
+});
+$("sheet").addEventListener("keydown",e=>{
+  if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("cell")){e.preventDefault();toggle(e.target)}
+});
+
+let editId=null;
+function endEdit(){editId=null;$("addForm").reset();$("saveBtn").textContent="Thêm thợ";$("cancelBtn").hidden=true}
+$("cancelBtn").onclick=endEdit;
+$("addForm").onsubmit=e=>{
+  e.preventDefault();
+  const name=$("name").value.trim(),phone=$("phone").value.trim();const wage=Math.max(0,parseFloat($("wage").value)||0);
+  if(!name||!phone)return;
+  if(editId){const w=state.workers.find(x=>x.id===editId);if(w){w.name=name;w.phone=phone;w.wage=wage}
+    save();endEdit();render();return toast("Đã lưu thay đổi")}
+  state.workers.push({id:"w"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,phone,wage});
+  save();e.target.reset();render();$("name").focus();toast("Đã thêm "+name);
+};
+
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2600)}
+$("today").onclick=()=>{
+  if(!state.workers.length)return toast("Chưa có thợ nào. Hãy thêm thợ trước.");
+  cur.m=now.getMonth()+1;cur.y=now.getFullYear();
+  const k=key(),d=now.getDate();state.att[k]=state.att[k]||{};
+  state.workers.forEach(w=>{state.att[k][w.id]=state.att[k][w.id]||{};state.att[k][w.id][d]="1"});
+  save();render();toast("Đã chấm đủ công ngày "+d+"/"+cur.m+"/"+cur.y+" cho "+state.workers.length+" thợ");
+};
+$("print").onclick=()=>window.print();
+render();
+</script>
+</body>
+</html>
